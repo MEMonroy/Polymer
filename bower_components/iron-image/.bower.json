@@ -1,0 +1,16 @@
+{
+  "name": "iron-image",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/PolymerElements/iron-image",
+  "version": "3.0.1",
+  "_release": "3.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.0.1",
+    "commit": "c8d7a8e94270fff5b2cbb4de5117b6d41100bc81"
+  },
+  "_source": "https://github.com/PolymerElements/iron-image.git",
+  "_target": "^3.0.1",
+  "_originalSource": "iron-image",
+  "_direct": true
+}
