@@ -12,8 +12,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <head>
   <title>iron-request</title>
 
-  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-  <script src="../node_modules/wct-browser-legacy/browser.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <link rel="import" href="../../polymer/polymer.html">
+  <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
+  <link rel="import" href="../iron-request.html">
 </head>
 <body>
   <test-fixture id="TrivialRequest">
@@ -21,43 +25,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <iron-request></iron-request>
     </template>
   </test-fixture>
-  <script type="module">
-    import '@polymer/polymer/polymer-legacy.js';
-    import '../iron-request.js';
+  <script>
     suite('<iron-request>', function() {
       var jsonResponseHeaders;
       var successfulRequestOptions;
-      var synchronousSuccessfulRequestOptions;
-      var asynchronousSuccessfulRequestOptions;
-      var asynchronousUndefSuccessfulRequestOptions;
       var request;
       var server;
 
       setup(function() {
-        jsonResponseHeaders = {'Content-Type': 'application/json'};
+        jsonResponseHeaders = {
+          'Content-Type': 'application/json'
+        };
         server = sinon.fakeServer.create();
-        server.respondWith(
-            'GET',
-            '/responds_to_get_with_json',
-            [200, jsonResponseHeaders, '{"success":true}']);
+        server.respondWith('GET', '/responds_to_get_with_json', [
+          200,
+          jsonResponseHeaders,
+          '{"success":true}'
+        ]);
 
-        server.respondWith(
-            'GET',
-            '/responds_to_get_with_prefixed_json',
-            [200, jsonResponseHeaders, '])}while(1);</x>{"success":true}']);
+        server.respondWith('GET', '/responds_to_get_with_prefixed_json', [
+          200,
+          jsonResponseHeaders,
+          '])}while(1);</x>{"success":true}'
+        ]);
 
-        server.respondWith('GET', '/responds_to_get_with_500', [500, {}, '']);
+        server.respondWith('GET', '/responds_to_get_with_500', [
+          500,
+          {},
+          ''
+        ]);
 
-        server.respondWith('GET', '/responds_to_get_with_100', [100, {}, '']);
+        server.respondWith('GET', '/responds_to_get_with_100', [
+          100,
+          {},
+          ''
+        ]);
 
-        server.respondWith(
-            'GET',
-            '/responds_to_get_with_0',
-            [0, jsonResponseHeaders, '{"success":true}']);
+        server.respondWith('GET', '/responds_to_get_with_0', [
+          0,
+          jsonResponseHeaders,
+          '{"success":true}'
+        ]);
 
 
         request = fixture('TrivialRequest');
-        successfulRequestOptions = {url: '/responds_to_get_with_json'};
+        successfulRequestOptions = {
+          url: '/responds_to_get_with_json'
+        };
 
         synchronousSuccessfulRequestOptions = {
           url: '/responds_to_get_with_json',
@@ -68,12 +82,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         asynchronousSuccessfulRequestOptions = {
           url: '/responds_to_get_with_json',
           async: true,
-          timeout: 100
-        };
-
-        asynchronousUndefSuccessfulRequestOptions = {
-          url: '/responds_to_get_with_json',
-          async: undefined,
           timeout: 100
         };
       });
@@ -98,8 +106,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(request.xhr.timeout).to.be.eql(undefined);
         });
 
-        test('timeout set if asynchronous is undefined', function() {
-          request.send(asynchronousUndefSuccessfulRequestOptions);
+        test('timeout set if asynchronous', function() {
+          request.send(asynchronousSuccessfulRequestOptions);
 
           expect(request.xhr.async).to.be.eql(true);
           expect(request.xhr.timeout).to.be.eql(100);
@@ -117,13 +125,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           server.respond();
 
-          return request.completes
-              .then(function() {
-                throw new Error('Request did not abort appropriately!');
-              })
-              .catch(function(e) {
-                expect(request.response).to.not.be.ok;
-              });
+          return request.completes.then(function() {
+            throw new Error('Request did not abort appropriately!');
+          }).catch(function(e) {
+            expect(request.response).to.not.be.ok;
+          });
         });
 
         test('can be aborted with request element', function() {
@@ -137,14 +143,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           server.respond();
 
-          return request.completes
-              .then(function() {
-                throw new Error('Request did not abort appropriately!');
-              })
-              .catch(function(e) {
-                expect(e.error).to.be.instanceof(Error);
-                expect(e.request).to.deep.equal(request);
-              });
+          return request.completes.then(function() {
+            throw new Error('Request did not abort appropriately!');
+          }).catch(function(e) {
+            expect(e.error).to.be.instanceof(Error);
+            expect(e.request).to.deep.equal(request);
+          });
         });
 
         test('default responseType is text', function() {
@@ -156,19 +160,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
-        test(
-            'default responseType of text is not applied, when async is false',
-            function() {
-              var options = Object.create(successfulRequestOptions);
-              options.async = false;
+        test('default responseType of text is not applied, when async is false', function() {
+          var options = Object.create(successfulRequestOptions);
+          options.async = false;
 
-              request.send(options);
-              server.respond();
+          request.send(options);
+          server.respond();
 
-              return request.completes.then(function() {
-                expect(request.xhr.responseType).to.be.empty;
-              });
-            });
+          return request.completes.then(function() {
+            expect(request.xhr.responseType).to.be.empty;
+          });
+        });
 
         test('responseType can be configured via handleAs option', function() {
           var options = Object.create(successfulRequestOptions);
@@ -176,8 +178,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           request.send(options);
           expect(server.requests.length).to.be.equal(1);
-          expect(server.requests[0].requestHeaders['accept'])
-              .to.be.equal('application/json');
+          expect(server.requests[0].requestHeaders['accept']).to.be.equal(
+              'application/json');
           server.respond();
 
           return request.completes.then(function() {
@@ -185,42 +187,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
-        test(
-            'setting jsonPrefix correctly strips it from the response', function() {
-              var options = {
-                url: '/responds_to_get_with_prefixed_json',
-                handleAs: 'json',
-                jsonPrefix: '])}while(1);</x>'
-              };
+        test('setting jsonPrefix correctly strips it from the response', function() {
+          var options = {
+            url: '/responds_to_get_with_prefixed_json',
+            handleAs: 'json',
+            jsonPrefix: '])}while(1);</x>'
+          };
 
-              request.send(options);
-              expect(server.requests.length).to.be.equal(1);
-              expect(server.requests[0].requestHeaders['accept'])
-                  .to.be.equal('application/json');
-              server.respond();
+          request.send(options);
+          expect(server.requests.length).to.be.equal(1);
+          expect(server.requests[0].requestHeaders['accept']).to.be.equal(
+              'application/json');
+          server.respond();
 
-              return request.completes.then(function() {
-                expect(request.response).to.deep.eq({success: true});
-              });
-            });
+          return request.completes.then(function() {
+            expect(request.response).to.deep.eq({success: true});
+          });
+        });
 
-        test(
-            'responseType cannot be configured via handleAs option, when async is false',
-            function() {
-              var options = Object.create(successfulRequestOptions);
-              options.handleAs = 'json';
-              options.async = false;
+        test('responseType cannot be configured via handleAs option, when async is false', function() {
+          var options = Object.create(successfulRequestOptions);
+          options.handleAs = 'json';
+          options.async = false;
 
-              request.send(options);
-              expect(server.requests.length).to.be.equal(1);
-              expect(server.requests[0].requestHeaders['accept'])
-                  .to.be.equal('application/json');
-              server.respond();
+          request.send(options);
+          expect(server.requests.length).to.be.equal(1);
+          expect(server.requests[0].requestHeaders['accept']).to.be.equal(
+              'application/json');
+          server.respond();
 
-              return request.completes.then(function() {
-                expect(request.response).to.be.a('string');
-              });
-            });
+          return request.completes.then(function() {
+            expect(request.response).to.be.a('string');
+          });
+        });
 
         test('headers are sent up', function() {
           var options = Object.create(successfulRequestOptions);
@@ -231,9 +230,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           request.send(options);
           expect(server.requests.length).to.be.equal(1);
           var fakeXhr = server.requests[0]
-          expect(fakeXhr.requestHeaders['foo']).to.be.equal('bar');
-          expect(fakeXhr.requestHeaders['accept'])
-              .to.be.equal('this should override the default');
+          expect(fakeXhr.requestHeaders['foo']).to.be.equal(
+              'bar');
+          expect(fakeXhr.requestHeaders['accept']).to.be.equal(
+              'this should override the default');
         });
 
         test('headers are deduped by lowercasing', function() {
@@ -248,36 +248,51 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(server.requests.length).to.be.equal(1);
           var fakeXhr = server.requests[0]
           expect(Object.keys(fakeXhr.requestHeaders).length).to.be.equal(2);
-          expect(fakeXhr.requestHeaders['foo']).to.be.equal('bar');
-          expect(fakeXhr.requestHeaders['accept'])
-              .to.be.equal('this should also override the default');
+          expect(fakeXhr.requestHeaders['foo']).to.be.equal(
+              'bar');
+          expect(fakeXhr.requestHeaders['accept']).to.be.equal(
+              'this should also override the default');
         });
       });
 
       suite('special cases', function() {
-        test(
-            'treats status code 0 as success, though the outcome is ambiguous',
-            function() {
-              // Note: file:// status code will probably be 0 no matter what
-              // happened.
-              request.send({url: '/responds_to_get_with_0'});
+        test('treats status code 0 as success, though the outcome is ambiguous', function() {
+          // Note: file:// status code will probably be 0 no matter what happened.
+          request.send({
+            url: '/responds_to_get_with_0'
+          });
 
-              server.respond();
+          server.respond();
 
-              expect(request.succeeded).to.be.equal(true);
-            });
+          expect(request.succeeded).to.be.equal(true);
+        });
 
         test('special form characters', function() {
           var testCases = [
-            {test: null, answer: ''},
-            {test: undefined, answer: ''},
-            {test: NaN, answer: 'NaN'},
+            {
+              test: null,
+              answer: ''
+            },
+            {
+              test: undefined,
+              answer: ''
+            },
+            {
+              test: NaN,
+              answer: 'NaN'
+            },
             {
               test: new String('\n\r\n\r'),
-              answer: '%0D%0A%0D%0A%0D'  // \r\n\r\n\r
+              answer: '%0D%0A%0D%0A%0D' // \r\n\r\n\r
             },
-            {test: 0, answer: '0'},
-            {test: new String('hello world'), answer: 'hello+world'}
+            {
+              test: 0,
+              answer: '0'
+            },
+            {
+              test: new String('hello world'),
+              answer: 'hello+world'
+            }
           ];
 
           var testCase;
@@ -292,7 +307,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       suite('errors', function() {
         test('treats status codes between 1 and 199 as errors', function() {
-          request.send({url: '/responds_to_get_with_100'});
+          request.send({
+            url: '/responds_to_get_with_100'
+          });
 
           server.respond();
 
@@ -300,7 +317,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         test('treats status codes between 300 and ∞ as errors', function() {
-          request.send({url: '/responds_to_get_with_500'});
+          request.send({
+            url: '/responds_to_get_with_500'
+          });
 
           server.respond();
 
@@ -310,7 +329,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       suite('status codes', function() {
         test('status and statusText is set after a ambiguous request', function() {
-          request.send({url: '/responds_to_get_with_0'});
+          request.send({
+            url: '/responds_to_get_with_0'
+          });
 
           server.respond();
 
@@ -318,26 +339,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           expect(request.statusText).to.be.equal('');
         });
 
-        test(
-            'status and statusText is set after a request that succeeded',
-            function() {
-              request.send({url: '/responds_to_get_with_json'});
+        test('status and statusText is set after a request that succeeded', function() {
+          request.send({
+            url: '/responds_to_get_with_json'
+          });
 
-              server.respond();
+          server.respond();
 
-              expect(request.status).to.be.equal(200);
-              expect(request.statusText).to.be.equal('OK');
-            });
+          expect(request.status).to.be.equal(200);
+          expect(request.statusText).to.be.equal('OK');
+        });
 
-        test(
-            'status and statusText is set after a request that failed', function() {
-              request.send({url: '/responds_to_get_with_500'});
+        test('status and statusText is set after a request that failed', function() {
+          request.send({
+            url: '/responds_to_get_with_500'
+          });
 
-              server.respond();
+          server.respond();
 
-              expect(request.status).to.be.equal(500);
-              expect(request.statusText).to.be.equal('Internal Server Error');
-            });
+          expect(request.status).to.be.equal(500);
+          expect(request.statusText).to.be.equal('Internal Server Error');
+        });
       });
     });
   </script>
