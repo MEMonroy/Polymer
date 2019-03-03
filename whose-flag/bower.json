@@ -1,13 +1,14 @@
 {
   "name": "whose-flag",
-  "description": "match flags to theis countries",
+  "description": "Match flags to their countries!",
   "main": "index.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
-    "app-layout": "^3.0.2",
-    "iron-image": "^3.0.1",
-    "paper-button": "^3.0.1",
-    "paper-styles": "^3.0.1"
+    "app-layout": "^2.0.1",
+    "iron-image": "^2.1.2",
+    "paper-button": "^2.0.0",
+    "paper-styles": "^3.0.1",
+    "iron-ajax": "^3.0.1"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",

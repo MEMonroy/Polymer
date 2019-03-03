@@ -1,0 +1,38 @@
+{ "charcodes":[
+{ 
+  "code": "trunks",
+  "name": "Trunks"
+},
+{ 
+  "code": "androide17",
+  "name": "Androide 17"
+},
+{ 
+  "code": "freezer",
+  "name": "Freezer"
+},
+{ 
+  "code": "gohan",
+  "name": "Gohan"
+},
+{ 
+  "code": "goku",
+  "name": "Goku"
+},
+{ 
+  "code": "krillin",
+  "name": "Krillin"
+},
+{ 
+  "code": "majinbu",
+  "name": "Majin Bu"
+},
+{ 
+  "code": "piccolo",
+  "name": "Piccolo"
+},
+{ 
+  "code": "vegeta",
+  "name": "Vegeta"
+}
+]}
